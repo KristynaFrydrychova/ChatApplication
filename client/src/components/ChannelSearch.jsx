@@ -1,3 +1,5 @@
+/* Vyhledávací pole */
+
 import React, { useState, useEffect } from 'react';
 import { useChatContext } from 'stream-chat-react';
 import { ResultsDropdown } from './'
@@ -17,7 +19,7 @@ const ChannelSearch = ({ setToggleContainer }) => {
         }
     }, [query])
 
-    const getChannels = async (text) => {
+    const getChannels = async (text) => { //async - čeká se na načtení skupin, přijme se text, který se bude vyhledávat
         try {
             const channelResponse = client.queryChannels({
                 type: 'team',
@@ -34,16 +36,15 @@ const ChannelSearch = ({ setToggleContainer }) => {
             if(channels.length) setTeamChannels(channels);
             if(users.length) setDirectChannels(users);
         } catch (error) {
-            setQuery('')
+            setQuery('') //při eroru nastaví dotaz opět na práznou hodnotu
         }
     }
 
     const onSearch = (event) => {
-        event.preventDefault();
-
-        setLoading(true);
-        setQuery(event.target.value);
-        getChannels(event.target.value)
+        event.preventDefault(); //neprovádět akci, dokud nebude událost explicitně zpracována
+        setLoading(true); 
+        setQuery(event.target.value); //nastaví hodnotu dotazu
+        getChannels(event.target.value) //získá seznam skupin, parametr je vložený text do vyhledávání text
     }
 
     const setChannel = (channel) => {
@@ -55,14 +56,14 @@ const ChannelSearch = ({ setToggleContainer }) => {
         <div className="channel-search__container">
             <div className="channel-search__input__wrapper">
                 <div className="channel-serach__input__icon">
-                    <SearchIcon />
+                    <SearchIcon /* vložení ikonky vyhledávání */ />
                 </div>
                 <input 
                     className="channel-search__input__text" 
-                    placeholder="Hledat" 
+                    placeholder="Hledat" //napovídající text uvnitř komponenty
                     type="text" 
-                    value={query}  
-                    onChange={onSearch}
+                    value={query} //dotaz
+                    onChange={onSearch} //event vyhledávání
                 />
             </div>
             { query && (

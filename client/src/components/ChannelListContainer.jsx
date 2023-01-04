@@ -1,14 +1,16 @@
+/* Postranní panel s možností odhlášení a přehledem skupin a uživatelů pro přímé zprávy */
+
 import React, { useState } from 'react';
 import { ChannelList, useChatContext } from 'stream-chat-react';
 import Cookies from 'universal-cookie';
 
-import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
+import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './'; //componenty pro vyhledávání, seznam kanálů a přímých zpráv
 import ChatIcon from '../assets/chatpicture.png'
 import LogoutIcon from '../assets/logout.png'
 
 const cookies = new Cookies();
 
-/* Postranní panel */
+/* Postranní panel - import ikonek chatu a logout */
 const SideBar = ({ logout }) => (
     <div className="channel-list__sidebar">
         <div className="channel-list__sidebar__icon1">
@@ -24,7 +26,8 @@ const SideBar = ({ logout }) => (
     </div>
 );
 
-/* Záhlaví */
+
+/* Záhlaví postranního panelu s nadpisem */
 const CompanyHeader = () => (
     <div className="channel-list__header">
         <p className="channel-list__header__text">Chatování s přáteli</p>
@@ -43,6 +46,7 @@ const customChannelMessagingFilter = (channels) => {
 const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEditing, setToggleContainer }) => {
     const { client } = useChatContext();
 
+    //při logout se odstraní cookies a znovu se našte stránka - objeví se přihlašovací stránka
     const logout = () => {
         cookies.remove("token");
         cookies.remove('userId');
@@ -57,17 +61,17 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
 
     return (
     <>
-        <SideBar logout={logout} />
-        <div className="channel-list__list__wrapper">
-            <CompanyHeader />
-            <ChannelSearch setToggleContainer={setToggleContainer}/>
-            <ChannelList 
-                filters={filters}
-                channelRenderFilterFn={customChannelTeamFilter}
-                List={(listProps) => (
-                    <TeamChannelList 
-                        {...listProps}
-                        type="team"
+        <SideBar logout={logout} /* postranní panel s logout ikonkou  a tlačítkem odhlášení*//> 
+        <div className="channel-list__list__wrapper"> 
+            <CompanyHeader /* záhlaví s nadpisem *//>
+            <ChannelSearch setToggleContainer={setToggleContainer} /* Vyhledávací pole *//>
+            <ChannelList /* Seznam skupin */
+                filters={filters} //objekt, který povoluje filtrovat mezi zprávami
+                channelRenderFilterFn={customChannelTeamFilter} //přidání skupin do filtru
+                List={(listProps) => ( //rendorování vlastního vytvořeného listu s názevm "skupiny"
+                    <TeamChannelList //vložení komponenty pro skupinové zprávy - nadpis
+                        {...listProps} //vložení vlastních komponent získá stejné vlastnosti, které nabízí stream ChannelList
+                        type="team" //pro skupinový chat
                         isCreating={isCreating}
                         setIsCreating={setIsCreating}
                         setCreateType={setCreateType} 
@@ -76,7 +80,7 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
                     />
                 )}
                 Preview={(previewProps) => (
-                    <TeamChannelPreview 
+                    <TeamChannelPreview //vložení komponenty pro skupinové zprávy - seznam skupin
                         {...previewProps}
                         setIsCreating={setIsCreating}
                         setIsEditing={setIsEditing}
@@ -85,7 +89,7 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
                     />
                 )}
             />
-            <ChannelList 
+            <ChannelList /* Seznam zpráv */
                 filters={filters}
                 channelRenderFilterFn={customChannelMessagingFilter}
                 List={(listProps) => (

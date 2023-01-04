@@ -1,11 +1,14 @@
+/*  Chat */
+
 import React from 'react';
 import { Channel, useChatContext, MessageSimple } from 'stream-chat-react';
 
 import { ChannelInner, CreateChannel, EditChannel, TeamMessage } from './';
 
 const ChannelContainer = ({ isCreating, setIsCreating, isEditing, setIsEditing, createType }) => {
-//const { channel } = useChatContext();
+//const { channel } = useChatContext(); //informace o specifické skupině
 
+  //zobrazení stránky pro vytvoření skupiny a nastavení hodnot při vytváření skupiny
   if(isCreating) {
     return (
       <div className="channel__container">
@@ -14,6 +17,7 @@ const ChannelContainer = ({ isCreating, setIsCreating, isEditing, setIsEditing, 
     )
   }
 
+  //zobrazení stránky pro editaci skupiny a nastavení hodnot při editaci skupiny
   if(isEditing) {
     return (
       <div className="channel__container">
@@ -22,6 +26,7 @@ const ChannelContainer = ({ isCreating, setIsCreating, isEditing, setIsEditing, 
     )
   }
 
+  //vytvoření nového chatu bez zpráv prozatím
   const EmptyState = () => (
     <div className="channel-empty__container">
         <p className="channel-empty__first">Tohle je začátek historie tvého chatu.</p>
@@ -29,7 +34,7 @@ const ChannelContainer = ({ isCreating, setIsCreating, isEditing, setIsEditing, 
     </div>
 )
 
-
+//vrací stránku chatu se zprávami
     return (
       <div className=" channel__container">
             <Channel
